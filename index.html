@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ru">
+>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>REPO.LABYBY.GAME — Казино</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">R</div>
+    <div>REPO.LABYBY.GAME</div>
+  </div>
+  <nav>
+    <a href="#home">Главная</a>
+    <a href="#slots">Слоты</a>
+    <a href="#mines">Сапёр</a>
+    <a href="#reviews">Отзывы</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <h1>REPO.LABYBY.GAME</h1>
+    <p>Добро пожаловать — честное развлечение и демо-слоты. Играйте ради удовольствия.</p>
+    <div class="scroll-hint">⬇ Прокрути вниз, чтобы играть ⬇</div>
+  </section>
+
+  <!-- 🎰 СЛОТ -->
+  <section class="slot-section" id="slots">
+    <div class="slot-wrap">
+      <div class="slot">
+        <div class="top">
+          <div class="title">🎰 REPO SLOTS</div>
+          <div class="balance">Баланс: <span id="balance">5000</span> ₽</div>
+        </div>
+        <div class="machine">
+          <div class="reels" id="reels">
+            <div class="reel" data-index="0"><div class="symbols" id="symbols0"></div></div>
+            <div class="reel" data-index="1"><div class="symbols" id="symbols1"></div></div>
+            <div class="reel" data-index="2"><div class="symbols" id="symbols2"></div></div>
+          </div>
+          <div id="message" class="message">Удачи!</div>
+          <div class="controls">
+            <div class="bet">
+              <button class="btn ghost" id="dec">-</button>
+              <div class="value">Ставка: <span id="bet">100</span> ₽</div>
+              <button class="btn ghost" id="inc">+</button>
+            </div>
+            <button class="btn spin" id="spin">▶ Крутить барабаны</button>
+            <button class="btn withdraw" id="withdraw">💸 Вывести деньги</button>
+          </div>
+        </div>
+        <p class="note">Собери 3 одинаковых символа, чтобы выиграть! 🍒 ×5, 🍋 ×10, 💎 ×50, ⭐ ×100.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 💣 САПЁР -->
+  <section class="minesweeper" id="mines">
+    <h2>💣 Сапёр</h2>
+    <p>Очки: <span id="score">0</span></p>
+    <p class="mine-msg" id="mineMsg">Найди все безопасные клетки!</p>
+    <div class="grid" id="grid"></div>
+    <button class="btn spin" id="newGame">🔁 Новая игра</button>
+  </section>
+
+  <!-- 💬 ОТЗЫВЫ -->
+  <section class="reviews" id="reviews">
+    <h2>💬 Отзывы игроков</h2>
+    <div class="reviews-list">
+      <div class="review"><div class="name">🔥 Илья К.</div><div class="stars">⭐</div><p>“Продал все свои пластинки, проебал.”</p></div>
+      <div class="review"><div class="name">🎰 Леонид К.</div><div class="stars">⭐</div><p>“Почти заработал на возращение долга ензаю, теперь в суде из за долгов”</p></div>
+      <div class="review"><div class="name">💎 Илья П.</div><div class="stars">⭐⭐⭐⭐⭐</div><p>“Заработал на квартиру во Владимире.”</p></div>
+	  <div class="review"><div class="name">💎 Саня О.</div><div class="stars">⭐⭐⭐⭐⭐</div><p>“Проебал все батины деньги с сво.”</p></div>
+    </div>
+  </section>
+</main>
+
+<footer>©2025 REPO.LABYBY.GAME — демо-казино от evuzi</footer>
+
+<!-- 💸 МОДАЛ -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2>💸 Вывод средств</h2>
+    <input type="number" id="amount" placeholder="Сумма, ₽" min="100" />
+    <input type="text" id="card" placeholder="Номер карты (16 цифр)" maxlength="19" />
+    <div class="modal-btns">
+      <button class="btn confirm" id="confirmWithdraw">Подтвердить</button>
+      <button class="btn close" id="closeModal">Отмена</button>
+    </div>
+    <p id="withdrawMsg" class="withdraw-msg"></p>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
