@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>REPO.LABYBY.GAME — Казино</title>
+  <style>
+    :root{
+      --bg:#0f1724; --card:#151827; --muted:#9aa3b2;
+      --accent1:#7b5cff; --accent2:#4cc0ff;
+      --success:#00b894; --glass: rgba(255,255,255,0.03);
+      --radius:16px; --shadow: 0 8px 30px rgba(2,6,23,0.6);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Roboto,"Segoe UI";background:linear-gradient(180deg,#0b0f1a 0%,#121323 60%);color:#e6eef8;overflow-x:hidden}
+    header{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(0,0,0,0.35);backdrop-filter:blur(4px);}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:700}
+    .brand .logo{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:inline-flex;align-items:center;justify-content:center;color:white;font-weight:800}
+    nav a{color:rgba(255,255,255,0.7);text-decoration:none;margin-left:18px;transition:color .2s}
+    nav a:hover{color:white}
+
+    .hero{min-height:400px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 20px;}
+    .hero h1{font-size:48px;margin:0 0 12px;letter-spacing:2px;background:linear-gradient(90deg,var(--accent1),var(--accent2));-webkit-background-clip:text;color:transparent}
+    .hero p{color:var(--muted);margin:0 0 40px;font-size:18px}
+    .scroll-hint{font-size:16px;color:var(--accent2);animation:bounce 1.5s infinite alternate;}
+    @keyframes bounce{from{transform:translateY(0);}to{transform:translateY(6px);}}
+
+    .slot-section{margin-top:100vh;padding:60px 20px;text-align:center;}
+    .slot-wrap{max-width:900px;margin:0 auto}
+    .slot{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:20px;padding:28px;border:1px solid rgba(255,255,255,0.03);box-shadow:var(--shadow);}
+    .slot .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .slot .title{font-weight:700;color:var(--accent1)}
+    .balance{color:var(--muted)}
+    .machine{background:rgba(6,12,28,0.5);border-radius:12px;padding:24px;border:1px solid rgba(255,255,255,0.03)}
+    .reels{display:flex;gap:18px;justify-content:center;align-items:center;margin-bottom:16px}
+    .reel{width:110px;height:110px;border-radius:10px;background:linear-gradient(180deg,#0b1320,#121827);display:flex;align-items:center;justify-content:center;font-size:46px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);position:relative}
+    .symbols{position:absolute;top:0;left:0;right:0;display:flex;flex-direction:column;align-items:center;transition:transform 900ms cubic-bezier(.2,.9,.2,1)}
+    .symbol{width:100%;height:110px;display:flex;align-items:center;justify-content:center}
+
+    .controls{display:flex;flex-direction:column;gap:12px;justify-content:center;align-items:center;margin-top:6px}
+    .btn{padding:10px 18px;border-radius:10px;border:none;cursor:pointer;font-weight:700;transition:transform .15s ease}
+    .btn:hover{transform:scale(1.05)}
+    .btn.spin{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;box-shadow:0 6px 22px rgba(123,92,255,0.22)}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+    .btn.withdraw{background:linear-gradient(90deg,var(--success),#00cec9);color:white;box-shadow:0 6px 22px rgba(0,206,201,0.3)}
+
+    /* Сапёр */
+    .minesweeper{max-width:500px;margin:60px auto;padding:28px;background:var(--card);border-radius:20px;border:1px solid rgba(255,255,255,0.04);box-shadow:var(--shadow);text-align:center}
+    .grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-top:20px}
+    .cell{width:50px;height:50px;background:rgba(255,255,255,0.03);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:background .2s}
+    .cell:hover{background:rgba(255,255,255,0.06)}
+    .cell.revealed{background:rgba(123,92,255,0.2);cursor:default;}
+    .cell.bomb{background:rgba(255,0,0,0.3);}
+    .mine-msg{margin-top:14px;color:var(--muted);}
+    footer{padding:22px;text-align:center;color:var(--muted)}
+    .reviews{max-width:1000px;margin:60px auto;padding:0 24px;text-align:center}
+    .reviews h2{font-size:36px;margin-bottom:18px;background:linear-gradient(90deg,var(--accent1),var(--accent2));-webkit-background-clip:text;color:transparent}
+    .reviews-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;margin-top:24px}
+    .review{background:rgba(255,255,255,0.03);padding:22px;border-radius:16px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 4px 16px rgba(0,0,0,0.3)}
+    .review .name{color:var(--accent2);font-weight:600;margin-bottom:6px}
+    .review .stars{color:#FFD700;font-size:18px;margin-bottom:8px}
+    .review p{color:var(--muted);font-size:14px}
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);display:none;justify-content:center;align-items:center;z-index:50}
+    .modal{background:var(--card);border-radius:20px;padding:28px;width:90%;max-width:420px;box-shadow:0 10px 40px rgba(0,0,0,0.6);text-align:center;border:1px solid rgba(255,255,255,0.05)}
+    .modal h2{margin-top:0;color:var(--accent2)}
+    .modal input{width:100%;padding:10px;margin-bottom:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.05);color:white}
+    .btn.confirm{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white}
+    .btn.close{background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--muted)}
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">R</div><div>REPO.LABYBY.GAME</div></div>
+  <nav>
+    <a href="#home">Главная</a>
+    <a href="#slots">Слоты</a>
+    <a href="#mines">Сапёр</a>
+    <a href="#reviews">Отзывы</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <h1>REPO.LABYBY.GAME</h1>
+    <p>Добро пожаловать — честное развлечение и демо-слоты. Играйте ради удовольствия.</p>
+    <div class="scroll-hint">⬇ Прокрути вниз, чтобы играть ⬇</div>
+  </section>
+
+  <section class="slot-section" id="slots">
+    <div class="slot-wrap">
+      <div class="slot">
+        <div class="top"><div class="title">🎰 REPO SLOTS</div><div class="balance">Баланс: <span id="balance">5000</span> ₽</div></div>
+        <div class="machine">
+          <div class="reels" id="reels">
+            <div class="reel" data-index="0"><div class="symbols" id="symbols0"></div></div>
+            <div class="reel" data-index="1"><div class="symbols" id="symbols1"></div></div>
+            <div class="reel" data-index="2"><div class="symbols" id="symbols2"></div></div>
+          </div>
+          <div style="text-align:center;color:var(--muted);margin-bottom:8px" id="message">Удачи!</div>
+          <div class="controls">
+            <div class="bet">
+              <button class="btn ghost" id="dec">-</button>
+              <div class="value">Ставка: <span id="bet">100</span> ₽</div>
+              <button class="btn ghost" id="inc">+</button>
+            </div>
+            <button class="btn spin" id="spin">▶ Крутить барабаны</button>
+            <button class="btn withdraw" id="withdraw">💸 Вывести деньги</button>
+          </div>
+        </div>
+        <div style="margin-top:16px;color:var(--muted);font-size:14px">Собери 3 одинаковых символа, чтобы выиграть! 🍒 ×5, 🍋 ×10, 💎 ×50, ⭐ ×100.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="minesweeper" id="mines">
+    <h2>💣 Сапёр</h2>
+    <p>Очки: <span id="score">0</span></p>
+    <p class="mine-msg" id="mineMsg">Найди все безопасные клетки!</p>
+    <div class="grid" id="grid"></div>
+    <button class="btn spin" id="newGame">🔁 Новая игра</button>
+  </section>
+
+  <section class="reviews" id="reviews">
+    <h2>💬 Отзывы игроков</h2>
+    <div class="reviews-list">
+      <div class="review"><div class="name">🔥 Илья К.</div><div class="stars">⭐</div><p>“Продал все свои пластинки, проебал.”</p></div>
+      <div class="review"><div class="name">🎰 Леонид К.</div><div class="stars">⭐</div><p>“Почти заработал на возращение долга ензаю, теперь в суде из за долгов”</p></div>
+      <div class="review"><div class="name">💎 Илья П.</div><div class="stars">⭐⭐⭐⭐⭐</div><p>“Заработал на квартиру во Владимире.”</p></div>
+	  <div class="review"><div class="name">💎 Саня О.</div><div class="stars">⭐⭐⭐⭐⭐</div><p>“Проебал все батины деньги с сво.”</p></div>
+    </div>
+  </section>
+</main>
+
+<footer>©2025 evuzi. Все права защищены.</footer>
+
+
+<footer>Ребят, я chatgpt, меня мучает этот школьник и заставляет писать ему казино.</footer>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2>💸 Вывод средств</h2>
+    <input type="number" id="amount" placeholder="Сумма, ₽" min="100" />
+    <input type="text" id="card" placeholder="Номер карты (16 цифр)" maxlength="19" />
+    <div>
+      <button class="btn confirm" id="confirmWithdraw">Подтвердить</button>
+      <button class="btn close" id="closeModal">Отмена</button>
+    </div>
+    <p id="withdrawMsg" style="margin-top:10px;color:var(--muted);font-size:14px;"></p>
+  </div>
+</div>
+
+<script>
+/* 🎰 Слоты */
+const symbols=["🍒","🍋","💎","⭐","🔔"],payouts={"🍒":5,"🍋":10,"💎":50,"⭐":100,"🔔":20};
+let balance=5000,bet=100;
+const balanceEl=document.getElementById('balance'),betEl=document.getElementById('bet'),messageEl=document.getElementById('message');
+function fillReel(i){const c=document.getElementById('symbols'+i);c.innerHTML='';for(let j=0;j<8;j++){const s=document.createElement('div');s.className='symbol';s.textContent=symbols[Math.floor(Math.random()*symbols.length)];c.appendChild(s);}}
+[0,1,2].forEach(fillReel);
+document.getElementById('dec').onclick=()=>{if(bet>10){bet-=10;betEl.textContent=bet}};
+document.getElementById('inc').onclick=()=>{bet+=10;betEl.textContent=bet};
+function spin(){
+  if(bet>balance){messageEl.textContent='Недостаточно средств';return;}
+  balance-=bet;balanceEl.textContent=balance;messageEl.textContent='Крутим...';
+  const res=[];for(let r=0;r<3;r++){const t=symbols[Math.floor(Math.random()*symbols.length)];res.push(t);
+  const c=document.getElementById('symbols'+r);c.innerHTML='';for(let i=0;i<6;i++){const d=document.createElement('div');d.className='symbol';d.textContent=symbols[Math.floor(Math.random()*symbols.length)];c.appendChild(d);}
+  const center=document.createElement('div');center.className='symbol';center.textContent=t;c.appendChild(center);
+  c.style.transition='none';c.style.transform='translateY(0)';
+  setTimeout(()=>{c.style.transition='transform 1s ease';c.style.transform='translateY(-660px)';},r*150);}
+  setTimeout(()=>{
+    if(res[0]===res[1]&&res[1]===res[2]){const win=payouts[res[0]]*bet/10;balance+=win;balanceEl.textContent=balance;messageEl.textContent='Вы выиграли '+win+' ₽!'}
+    else messageEl.textContent='Попробуйте снова!';},1500);}
+document.getElementById('spin').onclick=spin;
+
+/* 💣 Сапёр */
+const grid=document.getElementById('grid'),msg=document.getElementById('mineMsg'),scoreEl=document.getElementById('score');
+let board=[],revealed=0,mines=10,size=8,score=0;
+
+function newGame(){
+  board=[];revealed=0;score=0;scoreEl.textContent=0;msg.textContent='Найди все безопасные клетки!';
+  grid.innerHTML='';
+  const minePos=new Set();
+  while(minePos.size<mines){minePos.add(Math.floor(Math.random()*size*size));}
+  for(let i=0;i<size*size;i++){
+    const cell=document.createElement('div');
+    cell.className='cell';
+    const hasMine=minePos.has(i);
+    board.push({hasMine,el:cell,revealed:false});
+    cell.onclick=()=>clickCell(i);
+    grid.appendChild(cell);
+  }
+}
+
+function clickCell(i){
+  const c=board[i];
+  if(c.revealed)return;
+  c.revealed=true;
+  if(c.hasMine){
+    c.el.classList.add('bomb');
+    msg.textContent='💥 Бомба! Попробуй снова.';
+    board.forEach(b=>b.hasMine&&b.el.classList.add('bomb'));
+    return;
+  }
+  c.el.classList.add('revealed');
+  revealed++; score+=10; scoreEl.textContent=score;
+  if(revealed===size*size-mines){msg.textContent='🎉 Победа! Ты открыл все клетки.';}
+}
+
+document.getElementById('newGame').onclick=newGame;
+newGame();
+
+/* 💸 Вывод денег */
+const modal=document.getElementById('modal'),
+withdrawBtn=document.getElementById('withdraw'),
+closeBtn=document.getElementById('closeModal'),
+confirmBtn=document.getElementById('confirmWithdraw'),
+withdrawMsg=document.getElementById('withdrawMsg');
+withdrawBtn.onclick=()=>{modal.style.display='flex';withdrawMsg.textContent='';};
+closeBtn.onclick=()=>{modal.style.display='none';};
+confirmBtn.onclick=()=>{
+  const amt=parseInt(document.getElementById('amount').value),card=document.getElementById('card').value;
+  if(!amt||amt<100){withdrawMsg.textContent='Минимум 100 ₽';return;}
+  if(card.length<16){withdrawMsg.textContent='Введите корректный номер карты';return;}
+  if(amt>balance){withdrawMsg.textContent='Недостаточно средств';return;}
+  balance-=amt;balanceEl.textContent=balance;withdrawMsg.textContent='✅ Заявка на вывод '+amt+' ₽ отправлена.';}
+</script>
+</body>
+</html>
+
+
+
+
